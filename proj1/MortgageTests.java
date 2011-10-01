@@ -6,6 +6,9 @@ public class MortgageTests {
 public Mortgage mort;
 public DecimalFormat df, df2;
   
+  public static void main(String[] args) {
+    org.junit.runner.JUnitCore.main("MortgageTests");
+  }
   @Before
   public void setUp() {
     df = new DecimalFormat("#.##");
