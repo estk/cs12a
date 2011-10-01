@@ -53,9 +53,7 @@ public class Mortgage {
    * details of the loan.
    *
    * @param amnt the ammount of the loan
-   *
    * @param rate the percent interest rate of the loan
-   *
    * @param dura the duration of the loan in years
    */
 
