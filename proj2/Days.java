@@ -10,7 +10,10 @@
 import java.util.*;
 
 class Days {
-  class DataOutOfBounds extends Exception {}
+  
+  static class DateOutOfBoundsException extends Exception {
+    public DateOutOfBoundsException(String msg) { super(msg); }
+  }
   
   public static void main(String[] args) {
     
@@ -22,20 +25,28 @@ class Days {
     System.out.print( "Enter year: " );
     int year = scan.nextInt();
     
-    int res = daysSince1800(month, day, year);
-    System.out.println( "Number of days since 1/1/1800 is: " + res );
-    System.out.println( "Bye." );
+    try {
+      int res = daysSince1800(month, day, year);
+      System.out.println( "Number of days since 1/1/1800 is: " + res );
+      System.out.println( "Bye." );
+    }
+    catch (DateOutOfBoundsException e) {
+      System.out.println( "Date out of bounds: " + e.getMessage() );
+    }
   }
   
-  public static int daysSince1800(int month, int day, int year) throws DateOutOfBounds {
+  public static int daysSince1800(int month, int day, int year)
+  throws DateOutOfBoundsException
+  {
     //check input
-    if (day > daysInMonth(month)) throw DataOutOfBounds;
-    if (day < 1)     throw DataOutOfBounds;
-    if (month < 1)   throw DataOutOfBounds;
-    if (month > 12)  throw DataOutOfBounds;
-    if (year < 1800) throw DataOutOfBounds;
+    if (day > daysInMonth(month)) 
+      throw new DateOutOfBoundsException("The month specified doesn't have that many days");
+    if (day < 1)     throw new DateOutOfBoundsException("Day too small");
+    if (month < 1)   throw new DateOutOfBoundsException("Month too small");
+    if (month > 12)  throw new DateOutOfBoundsException("Month too big");
+    if (year < 1800) throw new DateOutOfBoundsException("Year must be >= 1800");
     
-    int res = daysSince1800(year);
+    int res = yearsToDaysSince1800(year);
     res += day;
     res += monthToDays(month);
     res += leaps(month, day, year);
@@ -43,35 +54,36 @@ class Days {
   }
   
   public static int leaps(int month, int day, int year) {
-    
+    return 0; //placeholder
   }
 
   public static int monthToDays(int month) {
     switch (month) {
       case 1:
-        return 31;
+        return 0;
       case 2:
-        return 59;
+        return 31;
       case 3:
-        return 90;
+        return 59;
       case 4:
-        return 120;
+        return 90;
       case 5:
-        return 151;
+        return 120;
       case 6:
-        return 118;
+        return 151;
       case 7:
-        return 212;
+        return 118;
       case 8:
-        return 243;
+        return 212;
       case 9:
-        return 273;
+        return 243;
       case 10:
-        return 304;
+        return 273;
       case 11:
-        return 334;
+        return 304;
       case 12:
-        return 365;
+        return 334;
+      default: return 0;
     }
   }
   
@@ -101,17 +113,21 @@ class Days {
         return 30;
       case 12:
         return 31;
+      default: return 0;
     }
   }
   
-  public static int daysSince1800(int year) {
-    return year - 1800;
+  public static int yearsToDaysSince1800(int year) {
+    return (year - 1800) * 365;
   }
   
   public static boolean isLeapYear(int year) {
-    if (year % 4 == 0)
-      return year % 100 != 0;
-    else 
-      return year % 400 == 0;
+    if (year % 4 == 0) {
+      if (year % 100 != 0)
+        return true;
+      else
+        return year % 400 == 0;
+    }
+    return false;
   }
 }

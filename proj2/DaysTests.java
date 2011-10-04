@@ -1,31 +1,35 @@
 import org.junit.* ;
 import static org.junit.Assert.* ;
-import java.text.* ;
 
 public class DaysTests {
 
   
   public static void main(String[] args) {
-    org.junit.runner.JUnitCore.main("MortgageTests");
+    org.junit.runner.JUnitCore.main("DaysTests");
   }
   
-  @test
-  public void daysSince1800() {
+  @Test
+  public void daysSince1800()
+  throws Days.DateOutOfBoundsException {
     assertTrue( 1 ==  Days.daysSince1800(1, 2, 1800) );
     assertTrue( 59 == Days.daysSince1800(3, 1, 1800) );
   }
   
-  @test(expected=DateOutOfBoundsException.class)
-  public void daysSince1800BadDays() {
+  @Test(expected=Days.DateOutOfBoundsException.class)
+  public void daysSince1800BadDays()
+  throws Days.DateOutOfBoundsException
+  {
     Days.daysSince1800(6, 31, 1921);
   }
   
-  @test(expected=DateOutOfBoundsException.class)
-  public void daysSince1800BadDays() {
+  @Test(expected=Days.DateOutOfBoundsException.class)
+  public void daysSince1800BadDays2()
+  throws Days.DateOutOfBoundsException
+  {
     Days.daysSince1800(1, 2, 1790);
   }
   
-  @test
+  @Test
   public void isLeapYear() {
     assertTrue(  Days.isLeapYear(2000));
     assertFalse( Days.isLeapYear(2001));
@@ -35,9 +39,9 @@ public class DaysTests {
     assertFalse( Days.isLeapYear(2005));
   }
   
-  @test // test just years
-  public void daysSince1800() {
-    assertTrue( 365*2 == daysSince1800(1802) );
+  @Test // test just years
+  public void yearToDaysSince1800() {
+    assertTrue( 365*2 == Days.yearsToDaysSince1800(1802) );
   }
   
 }
