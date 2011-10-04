@@ -38,23 +38,38 @@ class Days {
   public static int daysSince1800(int month, int day, int year)
   throws DateOutOfBoundsException
   {
-    //check input
-    if (day > daysInMonth(month)) 
-      throw new DateOutOfBoundsException("The month specified doesn't have that many days");
-    if (day < 1)     throw new DateOutOfBoundsException("Day too small");
-    if (month < 1)   throw new DateOutOfBoundsException("Month too small");
-    if (month > 12)  throw new DateOutOfBoundsException("Month too big");
-    if (year < 1800) throw new DateOutOfBoundsException("Year must be >= 1800");
-    
+    isDayKosher(month, day, year); //check input
     int res = yearsToDaysSince1800(year);
     res += day;
     res += monthToDays(month);
     res += leaps(month, day, year);
-    return res;
+    return res - 1;
   }
   
+  public static void isDayKosher(int month, int day, int year)
+  throws DateOutOfBoundsException
+  {
+    if (day < 1)     throw new DateOutOfBoundsException("Day too small");
+    if (month < 1)   throw new DateOutOfBoundsException("Month too small");
+    if (month > 12)  throw new DateOutOfBoundsException("Month too big");
+    if (year < 1800) throw new DateOutOfBoundsException("Year must be >= 1800");
+  
+    if (day > daysInMonth(month)) {
+      if ( isLeapYear(year) && month == 2 && day == 29);
+      else throw new DateOutOfBoundsException("The month specified doesn't have that many days");
+    }
+  }
+  
+  
   public static int leaps(int month, int day, int year) {
-    return 0; //placeholder
+    int diff = year - 1796;
+    int res = diff / 4;
+    res -= diff / 100;
+    res += diff / 400;
+    if ( isLeapYear(year) ) {
+      if ( month <= 2 ) res--;
+    }
+    return res;
   }
 
   public static int monthToDays(int month) {
