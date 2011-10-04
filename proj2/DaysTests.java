@@ -10,7 +10,7 @@ public class DaysTests {
   
   @Test
   public void daysSince1800()
-  throws Days.DateOutOfBoundsException {
+  throws Days.DateInvalidException {
 
 // provided input
     assertTrue("Expected 1, result was: "  + Days.daysSince1800(1, 2, 1800),
@@ -39,37 +39,37 @@ public class DaysTests {
 
   }
   
-  @Test(expected=Days.DateOutOfBoundsException.class)
+  @Test(expected=Days.DateInvalidException.class)
   public void daysSince1800BadDays()
-  throws Days.DateOutOfBoundsException
+  throws Days.DateInvalidException
   {
     Days.daysSince1800(6, 31, 1921);
   }
   
-  @Test(expected=Days.DateOutOfBoundsException.class)
+  @Test(expected=Days.DateInvalidException.class)
   public void daysSince1800BadDays2()
-  throws Days.DateOutOfBoundsException
+  throws Days.DateInvalidException
   {
     Days.daysSince1800(1, 2, 1790);
   }
   
-  @Test(expected=Days.DateOutOfBoundsException.class)
+  @Test(expected=Days.DateInvalidException.class)
   public void daysSince1800BadDays3()
-  throws Days.DateOutOfBoundsException
+  throws Days.DateInvalidException
   {
     Days.daysSince1800(2, 40, 1921);
   }
   
-  @Test(expected=Days.DateOutOfBoundsException.class)
+  @Test(expected=Days.DateInvalidException.class)
   public void daysSince1800BadDays4()
-  throws Days.DateOutOfBoundsException
+  throws Days.DateInvalidException
   {
     Days.daysSince1800(2, 29, 1800);
   }
   
-  @Test(expected=Days.DateOutOfBoundsException.class)
+  @Test(expected=Days.DateInvalidException.class)
   public void daysSince1800BadDays5()
-  throws Days.DateOutOfBoundsException
+  throws Days.DateInvalidException
   {
     Days.daysSince1800(2, 29, 2001);
   }
