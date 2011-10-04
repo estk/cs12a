@@ -62,13 +62,12 @@ class Days {
   
   
   public static int leaps(int month, int day, int year) {
-    int diff = year - 1796;
-    int res = diff / 4;
-    res -= diff / 100;
-    res += diff / 400;
-    if ( isLeapYear(year) ) {
-      if ( month <= 2 ) res--;
-    }
+    int res = (year - 1800) / 4; // every 4   years (from last occurence 1800) add 1
+    res -= (year - 1800) / 100;  // every 100 years (from last occurence 1800) subtract 1
+    res += (year - 1600) / 400;  // every 400 years (from last occurence 1600) add 1
+    
+    if ( isLeapYear(year) && month <= 2 )
+      res--;   // there is already a leap day factored in if the year is a leap
     return res;
   }
 
@@ -102,6 +101,12 @@ class Days {
     }
   }
   
+  /**
+   * Returns the number of days in a month
+   * @param month the month in question
+   * @returns the days in the month
+   */
+  
   public static int daysInMonth(int month) {
     switch (month) {
       case 1:
@@ -131,11 +136,20 @@ class Days {
       default: return 0;
     }
   }
-  
+    /**
+   * Converts a year to days since 1, 1, 1800
+   * @param year the year which is being converted
+   * @returns an integer representing days
+   */
   public static int yearsToDaysSince1800(int year) {
     return (year - 1800) * 365;
   }
   
+  /**
+   * Determines if the year given is a leap year
+   * @param year the year that is being tested
+   * @returns a boolean value of the leapness of the year
+   */
   public static boolean isLeapYear(int year) {
     if (year % 4 == 0) {
       if (year % 100 != 0)

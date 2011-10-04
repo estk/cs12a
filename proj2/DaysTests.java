@@ -74,6 +74,44 @@ public class DaysTests {
     Days.daysSince1800(2, 29, 2001);
   }
   
+// test 1st leap
+  @Test
+  public void leaps1() {
+    assertTrue( 0 == Days.leaps(1, 1, 1804));
+  }
+
+  @Test
+  public void leaps2() {
+    assertTrue( 0 == Days.leaps(2, 28, 1804));
+  }
+
+  @Test
+  public void leaps3() {
+    assertTrue( 0 == Days.leaps(2, 29, 1804));
+  }
+
+  @Test
+  public void leaps4() {
+    assertTrue( 1 == Days.leaps(3, 1, 1804));
+  }
+// test later leaps
+
+  @Test
+  public void leaps5() {
+    assertTrue( 24 == Days.leaps(2, 28, 1904));
+  }
+
+  @Test
+  public void leaps6() {
+    assertTrue("actual: " + Days.leaps(2, 29, 1904), 24 == Days.leaps(2, 29, 1904));
+  }
+
+  @Test
+  public void leaps7() {
+    assertTrue( 25 == Days.leaps(3, 1, 1904));
+  }
+
+  
   @Test
   public void isLeapYear() {
     assertTrue(  Days.isLeapYear(2000));
