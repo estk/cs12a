@@ -6,6 +6,10 @@
 /* October 4rd, 2011             */
 /*                               */
 /* See javadoc for more info     */
+/*                               */
+/* PLEASE HAVE A LOOK AT MY      */
+/* JUNIT TEST SUITE:             */
+/* BonusDaysTests.java           */ 
 /*********************************/
 
 import java.util.*;

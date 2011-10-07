@@ -5,6 +5,10 @@
 /* October 4rd, 2011            */
 /*                              */
 /* See javadoc for more info    */
+/*                               */
+/* PLEASE HAVE A LOOK AT MY      */
+/* JUNIT TEST SUITE:             */
+/* DaysTests.java           */ 
 /********************************/
 
 import java.util.*;
