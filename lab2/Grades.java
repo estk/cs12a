@@ -24,6 +24,7 @@ public class Grades {
   public static String gradeToMeaning(char grade)
   throws InvalidGradeException
   {
+    grade = Character.toUpperCase(grade);
     switch (grade) {
       case 'A':
         return "Average";
