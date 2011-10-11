@@ -58,7 +58,7 @@ public class Grades {
       case 'F':
         return "Forever Forgotten";
       default:
-        throw new InvalidGradeException("The grade entered is not valid.");
+        throw new InvalidGradeException( grade + " is not a valid grade letter.");
     }
   }
 }
