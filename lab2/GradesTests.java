@@ -12,6 +12,7 @@ public class GradesTests {
   public void aToMeaning()
   throws Grades.InvalidGradeException
   {
+    assertTrue("Average" == Grades.gradeToMeaning('a'));
     assertTrue("Average" == Grades.gradeToMeaning('A'));
   }
   
@@ -19,6 +20,7 @@ public class GradesTests {
   public void bToMeaning()
   throws Grades.InvalidGradeException
   {
+    assertTrue("Bad" == Grades.gradeToMeaning('b'));
     assertTrue("Bad" == Grades.gradeToMeaning('B'));
   }
   
@@ -26,6 +28,7 @@ public class GradesTests {
   public void cToMeaning()
   throws Grades.InvalidGradeException
   {
+    assertTrue("Catastrophe" == Grades.gradeToMeaning('c'));
     assertTrue("Catastrophe" == Grades.gradeToMeaning('C'));
   }
   
@@ -33,6 +36,7 @@ public class GradesTests {
   public void dToMeaning()
   throws Grades.InvalidGradeException
   {
+    assertTrue("Disowned" == Grades.gradeToMeaning('d'));
     assertTrue("Disowned" == Grades.gradeToMeaning('D'));
   }
   
@@ -40,6 +44,7 @@ public class GradesTests {
   public void fToMeaning()
   throws Grades.InvalidGradeException
   {
+    assertTrue("Forever Forgotten" == Grades.gradeToMeaning('f'));
     assertTrue("Forever Forgotten" == Grades.gradeToMeaning('F'));
   }
   
@@ -49,6 +54,13 @@ public class GradesTests {
   {
     Grades.gradeToMeaning('e');
   }
+  
+  @Test(expected=Grades.InvalidGradeException.class)
+  public void bigEToMeaningFailure()
+  throws Grades.InvalidGradeException
+  {
+    Grades.gradeToMeaning('E');
+  }
 
   @Test(expected=Grades.InvalidGradeException.class)
   public void gToMeaningFailure()
@@ -57,4 +69,10 @@ public class GradesTests {
     Grades.gradeToMeaning('g');
   }
 
+  @Test(expected=Grades.InvalidGradeException.class)
+  public void bigGToMeaningFailure()
+  throws Grades.InvalidGradeException
+  {
+    Grades.gradeToMeaning('G');
+  }
 }
