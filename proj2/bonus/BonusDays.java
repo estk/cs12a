@@ -3,7 +3,7 @@
 /*     the days between two days */
 /* Author: Evan Simmons          */
 /* CMP 12A/L, Fall 2011          */
-/* October 4rd, 2011             */
+/* October 4th, 2011             */
 /*                               */
 /* See javadoc for more info     */
 /*                               */
