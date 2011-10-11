@@ -2,13 +2,13 @@
 /* Program: Days since 1800     */
 /* Author: Evan Simmons         */
 /* CMP 12A/L, Fall 2011         */
-/* October 4rd, 2011            */
+/* October 4th, 2011            */
 /*                              */
 /* See javadoc for more info    */
-/*                               */
-/* PLEASE HAVE A LOOK AT MY      */
-/* JUNIT TEST SUITE:             */
-/* DaysTests.java           */ 
+/*                              */
+/* PLEASE HAVE A LOOK AT MY     */
+/* JUNIT TEST SUITE:            */
+/* DaysTests.java               */ 
 /********************************/
 
 import java.util.*;
