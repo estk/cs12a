@@ -30,7 +30,10 @@ public class Grades {
     System.out.print("Enter the grade letter: ");
 
     try {
-      char grade = Character.toUpperCase( scan.next().charAt(0) );
+      String input = scan.next();
+      if (input.length() > 1) 
+        throw new InvalidGradeException( input + " is not a valid grade letter.");
+      char grade = Character.toUpperCase( input.charAt(0) );
       String meaning = gradeToMeaning(grade);
       System.out.printf("Grade letter %c means %s.\n", grade, meaning);
     }
