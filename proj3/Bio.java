@@ -35,18 +35,18 @@ public class Bio {
   }
 
   static int pBio(int days) {
-    double tmp = 21 + Math.sin( (2* Math.PI *days)/23 ) * 20; // scale to an integer between 1 and 40 inclusive
-    return (int) tmp;
+    double tmp = 21 + Math.sin( (2* Math.PI *days)/23.0 ) * 20; // scale to an integer between 1 and 40 inclusive
+    return (int)Math.round(tmp);
   }
 
   static int iBio(int days) {
     double tmp = 21 + Math.sin( (2* Math.PI *days)/33 ) * 20;
-    return (int) tmp;
+    return (int)Math.round(tmp);
   }
 
   static int eBio(int days) {
     double tmp = 21 + Math.sin( (2* Math.PI *days)/28 ) * 20;
-    return (int) tmp;
+    return (int)Math.round(tmp);
   }
   
   static void printChart(int daysToChart, int chartMonth, int chartYear)
@@ -66,8 +66,8 @@ public class Bio {
       day = dayOfWeek(chartMonth, i, chartYear);
       // Add 'P', 'I' and 'E' to string
       bioStr = changeCharacter( phys, 'P', bioStr );
-      bioStr = changeCharacter( intel, 'I', bioStr);
       bioStr = changeCharacter( emo, 'E', bioStr);
+      bioStr = changeCharacter( intel, 'I', bioStr);
       // Print line info
       System.out.printf("%2d/%2d/%4d  %.3s  ", chartMonth, i, chartYear, day);
       System.out.print(bioStr);

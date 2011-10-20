@@ -3,7 +3,7 @@ import static org.junit.Assert.* ;
 
 public class BioTests {
 
-  int days1, days2;
+  int days1, days2, days3;
   public static void main(String[] args) {
     org.junit.runner.JUnitCore.main("BioTests");
   }
@@ -38,30 +38,37 @@ public class BioTests {
     int start = Days.daysSince1800(10, 15, 2011);
     days1 = Days.daysSince1800(11, 1, 2011) - start;
     days2 = Days.daysSince1800(11, 2, 2011) - start;
+    days3 = Days.daysSince1800(11, 30, 2011) - start;
   }
     
   @Test
   public void pBio()
   throws Days.DateInvalidException
   {
-    assertTrue(1 == Bio.pBio(days1));
-    assertTrue(1 == Bio.pBio(days2));
+    assertTrue("result was " + Bio.pBio(days1), 1 == Bio.pBio(days1));
+    assertTrue("result was " + Bio.pBio(days2), 1 == Bio.pBio(days2));
+    // test end
+    assertTrue("result was " + Bio.pBio(days3), 21 == Bio.pBio(days3));
   }
 
   @Test
   public void iBio()
   throws Days.DateInvalidException
   {
-    assertTrue("result was" + Bio.iBio(days1), 19 == Bio.iBio(days1));
-    assertTrue(15 == Bio.iBio(days2));
+    assertTrue("result was " + Bio.iBio(days1), 19 == Bio.iBio(days1));
+    assertTrue("result was " + Bio.iBio(days2), 15 == Bio.iBio(days2));
+    // test end
+    assertTrue("result was " + Bio.iBio(days3), 33 == Bio.iBio(days3));
   }
 
   @Test
   public void eBio()
   throws Days.DateInvalidException
   {
-    //assertTrue("result was" + Bio.eBio(days1), 9 == Bio.eBio(days1)); \\ this isnt working due to a slight variation in the equation.
-    assertTrue(5  == Bio.eBio(days2));
+    assertTrue("result was " + Bio.eBio(days1), 9 == Bio.eBio(days1));
+    assertTrue("result was " + Bio.eBio(days2), 5  == Bio.eBio(days2));
+    // test end
+    assertTrue("result was " + Bio.eBio(days3), 5 == Bio.eBio(days3));
   }
 
 }
