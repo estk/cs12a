@@ -1,7 +1,34 @@
+/********************************/
+/* Program: Biorhythm           */
+/* Author: Evan Simmons         */
+/* CMP 12A/L, Fall 2011         */
+/* October 19th, 2011           */
+/*                              */
+/* See javadoc for more info    */
+/*                              */
+/* PLEASE HAVE A LOOK AT MY     */
+/* JUNIT TEST SUITE:            */
+/* BioTests.java                */ 
+/********************************/
+
 import java.util.*;
 
+/**
+ * The Bio class prints the biorhythm of the
+ * person who's birthday is entered in the month
+ * they enter
+ * <p>
+ * One's biorhythm can be calulated interactively,
+ * or via the printChart() method.
+ *
+ @author Evan Simmons
+ */
+
 public class Bio {
-  
+
+  /**
+   * The main() method for calculating one's biorhythm interactively
+   */
   public static void main(String[] args) {
     int birthMonth, birthDay, birthYear, chartMonth, chartYear, birthTo1800, daysToChart;
     Scanner scan = new Scanner(System.in);
@@ -34,28 +61,44 @@ public class Bio {
     }
   }
 
+  /**
+   * Calculates the physical biorhythm, then scales to an
+   * int between 1 and 40 inclusive.
+   */
   static int pBio(int days) {
-    double tmp = 21 + Math.sin( (2* Math.PI *days)/23.0 ) * 20; // scale to an integer between 1 and 40 inclusive
+    double tmp = 21 + Math.sin( (2* Math.PI *days)/23.0 ) * 20;
     return (int)Math.round(tmp);
   }
-
+  
+  /**
+   * Calculates the intellectual biorhythm, then scales to an
+   * int between 1 and 40 inclusive.
+   */
   static int iBio(int days) {
     double tmp = 21 + Math.sin( (2* Math.PI *days)/33 ) * 20;
     return (int)Math.round(tmp);
   }
 
+  /**
+   * Calculates the emotional biorhythm, then scales to an
+   * int between 1 and 40 inclusive.
+   */
   static int eBio(int days) {
     double tmp = 21 + Math.sin( (2* Math.PI *days)/28 ) * 20;
     return (int)Math.round(tmp);
   }
   
+  /**
+   * Prints the biorhythm chart for someone with daysToChart days between
+   * birth and the 1st day of chartMonth in chartYear.
+   */
   static void printChart(int daysToChart, int chartMonth, int chartYear)
   throws Days.DateInvalidException
   {
     int phys, intel, emo;
     String day, bioStr, borderString   = "+--------------------+--------------------+", 
                         emptyBioString = "|                    +                    |\n";
-    // preamble
+    // header
     System.out.println("    Numeromancer Biorhythm Chart\n");
     System.out.printf("%-17s", "Date");
     System.out.println( borderString );
@@ -71,13 +114,14 @@ public class Bio {
       // Print line info
       System.out.printf("%2d/%2d/%4d  %.3s  ", chartMonth, i, chartYear, day);
       System.out.print(bioStr);
-
-      //System.out.printf("    p: %2d  i: %2d  e: %2d\n", phys, intel, emo); // show actual pie values (for debugging)
     }
-
+    // footer
     System.out.printf( "%17s" + borderString + "\n", "" );
   }
-  
+
+  /**
+   * returns the day of the week of the date passed as arguments.
+   */
   static String dayOfWeek(int month, int day, int year)
   throws Days.DateInvalidException
   {
@@ -119,8 +163,8 @@ public class Bio {
     }
 }
 
-// todo: document
-
+// Note: I would have just kept this separate if not for the grading constraints.
+//       I had to be sure that my Days class would be compiled.
 
 /**
  * The Days class calculates the number of
