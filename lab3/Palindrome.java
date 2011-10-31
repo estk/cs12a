@@ -1,3 +1,11 @@
+/********************************/
+/* Program: Palindromes         */
+/* Author: Evan Simmons         */
+/* CMP 12A/L, Fall 2011         */
+/* October 31th, 2011           */
+/*                              */
+/********************************/
+
 import java.util.*;
 class Palindrome {
     public static void main(String[] args) {
