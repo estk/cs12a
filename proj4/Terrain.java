@@ -132,8 +132,16 @@ public class Terrain {
 /**************************************************/
 
     static Boolean lineBetween(int x1, int y1, int x2, int y2) {
-        int max = pgmInf.img[x1][y1];
+        int max = Math.max( pgmInf.img[x1][y1], pgmInf.img[x2][y2] );
         double m, b;
+
+        if (x1 == x2) {
+            // x = c
+            for (int y=0 ; y < pgmInf.height ; y++) {
+                if (pgmInf.img[x1][y] > max) { return false; } 
+            }
+            return true;
+        }
     
         m = (y1-y2)/(x1-x2); b = y1 - m * x1;
         if ( b >= 0 ) {
@@ -148,7 +156,7 @@ public class Terrain {
             m = (x1-x2)/(y1-y2); b = x1 - m * y1;
             for (int y=0 ; y < pgmInf.height ; y++) {
                 int x = (int)Math.round( m*y + b );
-                if (pgmInf.img[x][y] > max) { return false;}
+                if (pgmInf.img[x][y] > max) { return false; }
             }
         }
 
