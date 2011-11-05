@@ -32,8 +32,13 @@ public class Terrain {
     static void actionPrompt() {
         prompt:
         while (true) {
+            String line = "";
             System.out.println("\nWhat do you want to do: (S)ave, (F)ill, (L)ine, (V)isible, (Q)uit: ");
-            char action = scan.nextLine().charAt(0);
+            while (line.length() < 1) {
+                line = scan.nextLine().toUpperCase();
+            }
+            System.out.println(line); // debuging
+            char action = line.charAt(0);
             switch (action) {
                 case 'Q':
                     break prompt;
@@ -57,17 +62,22 @@ public class Terrain {
 
 
     static void save() {
-        String fileName; char answer;
+        String fileName, line = ""; char answer;
         System.out.println("Enter file name to save: "); fileName = scan.nextLine();
         File file = new File(fileName);
         
         if ( file.isFile() ) {
             System.out.printf("WARNING: %s exists.\n", fileName);
-            System.out.print("Overwrite (y/n)? "); answer = scan.nextLine().toUpperCase().charAt(0);
+            System.out.print("Overwrite (y/n)? ");
+            while (line.length() < 1) {
+                line = scan.nextLine().toUpperCase();
+            }
+            System.out.println(line); // debuging
+            answer = line.charAt(0);
 
             switch (answer) {
-                case 'n': save();
-                case 'y': break;
+                case 'N': save();
+                case 'Y': break;
                 default: save();
             }
         }
@@ -80,12 +90,12 @@ public class Terrain {
         System.out.print("Enter reference point: ");
         x = scan.nextInt(); y = scan.nextInt();
         // calcs
-        if ( pointInPgm( x, y ) ) {
+        if ( ! pointInPgm( x, y ) ) {
             System.out.println("WARNING: reference point is not in terrain.");
             fill();
         }
         height = getPixValue(x, y);
-        System.out.printf("Marking all pixels below %d as 0, and others as %d.", height, (pgmInf.maxValue / 2) );
+        System.out.printf("Marking all pixels below %d as 0, and others as %d.\n", height, (pgmInf.maxValue / 2) );
         fillGt( height );
         
         System.out.println("Done.");
@@ -128,7 +138,7 @@ public class Terrain {
         m = (y1-y2)/(x1-x2); b = y1 - m * x1;
         if ( b >= 0 ) {
             // y = mx + b
-            for (int x=0 ; x <= pgmInf.width ; x++) {
+            for (int x=0 ; x < pgmInf.width ; x++) {
                 int y = (int)Math.round( m*x + b );
                 if (pgmInf.img[x][y] > max ) { return false; }
             }
@@ -136,7 +146,7 @@ public class Terrain {
         else {
             // x = my + b
             m = (x1-x2)/(y1-y2); b = x1 - m * y1;
-            for (int y=0 ; y <= pgmInf.height ; y++) {
+            for (int y=0 ; y < pgmInf.height ; y++) {
                 int x = (int)Math.round( m*y + b );
                 if (pgmInf.img[x][y] > max) { return false;}
             }
@@ -155,12 +165,14 @@ public class Terrain {
 
     static void fillGt(int height) {
         int pixel;
-        for (int x=0 ; x <= pgmInf.width ; x++) {
-            for (int y=0 ; y <= pgmInf.height ; y++) {
+        for (int x=0 ; x < pgmInf.width ; x++) {
+            for (int y=0 ; y < pgmInf.height ; y++) {
                 pixel = pgmInf.img[x][y]; 
                 if ( pixel < height)
                     pgmInf.img[x][y] = 0;
-                pgmInf.img[x][y] = pgmInf.maxValue / 2;
+                else {
+                    pgmInf.img[x][y] = pgmInf.maxValue / 2;
+                }
             }
         }
     }
@@ -256,7 +268,9 @@ class PgmImageInfo {
             // write filetype
             writer.write("P2\n");
             // write dimensions
-            writer.write(width + " " + height + "/n");
+            writer.write(width + " " + height + "\n");
+            // write max value
+            writer.write(maxValue + "\n");
             // write image
             writer.write( toString() );
             writer.close();
@@ -268,8 +282,9 @@ class PgmImageInfo {
 
     public String toString() {
         String res = "";
-        for (int i=0 ; i <= this.width ; i++) {
-            for (int j=0 ; j <= this.height ; i++) {
+        System.out.println(width + " " + height); // debuging
+        for (int i=0 ; i < width ; i++) {
+            for (int j=0 ; j < height ; j++) {
                 res += this.img[i][j] + " ";
             }
             res += "\n";
