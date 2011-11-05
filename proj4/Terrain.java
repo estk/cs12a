@@ -123,9 +123,12 @@ public class Terrain {
         // mark visible points
         for (int i=0 ; i < pgmInf.width ; i++) {
             for (int j=0 ; j < pgmInf.height ; j++) {
+                System.out.println(i + " : " + j); // debugging
                 if ( lineBetween(x, y, i, j) ) res[i][j] = 0;
+                System.out.println(i + " : " + j + " : " + lineBetween(x, y, i, j) ); // debugging
             }
         }
+        pgmInf.img = res;
         System.out.println("Done.");
     }
 
@@ -137,26 +140,34 @@ public class Terrain {
 
         if (x1 == x2) {
             // x = c
+            System.out.println("// x = c"); //debugging
             for (int y=0 ; y < pgmInf.height ; y++) {
-                if (pgmInf.img[x1][y] > max) { return false; } 
+                System.out.println(x1 +" : "+ y); //debugging
+                if (pgmInf.img[x1][y] > max) return false;
             }
             return true;
         }
     
         m = (y1-y2)/(x1-x2); b = y1 - m * x1;
-        if ( b >= 0 ) {
+        if ( m >= 0 ) {
             // y = mx + b
+            System.out.println("// y = mx + b"); //debugging
             for (int x=0 ; x < pgmInf.width ; x++) {
                 int y = (int)Math.round( m*x + b );
-                if (pgmInf.img[x][y] > max ) { return false; }
+                System.out.println(x +" : "+ y); //debugging
+                if (y < 0 || y >= pgmInf.height) continue;
+                else if (pgmInf.img[x][y] > max ) return false;
             }
         }
         else {
             // x = my + b
+            System.out.println("// x = my + b"); //debugging
             m = (x1-x2)/(y1-y2); b = x1 - m * y1;
             for (int y=0 ; y < pgmInf.height ; y++) {
                 int x = (int)Math.round( m*y + b );
-                if (pgmInf.img[x][y] > max) { return false; }
+                System.out.println(x +" : "+ y); //debugging
+                if (x < 0 || x >= pgmInf.width) continue;
+                else if (pgmInf.img[x][y] > max) return false;
             }
         }
 
