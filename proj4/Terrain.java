@@ -54,8 +54,9 @@ public class Terrain {
     static void save() {
         String fileName; char answer;
         System.out.println("Enter file name to save: "); fileName = scan.nextLine();
+        File file = new File(fileName);
         
-        if (fileExists( fileName )) {
+        if ( file.isFile() ) {
             System.out.printf("WARNING: %s exists.\n", fileName);
             System.out.print("Overwrite (y/n)? "); answer = scan.nextLine().toUpperCase().charAt(0);
 
@@ -98,17 +99,33 @@ public class Terrain {
             System.out.println("Point 2 is not visible from point 1.");
     }
 
-    static void visible() {
-        
+static void visible() {
+    
+}
+
+static Boolean lineBetween(int x1, int y1, int x2, int y2) {
+    int max;
+    double m, b;
+    
+    m = (y1-y2)/(x1-x2); b = y1 - m * x1;
+    if ( b >= 0 ) {
+        // y = mx + b
+        for (int x=0 ; x <= pgmInf.width ; x++) {
+            int y = Math.round( m*x + b );
+            if (pgmInf.img[x][y] > max ) { return false; }
+        }
+    }
+    else {
+        // x = my + b
+        m = (x1-x2)/(y1-y2); b = x1 - m * y1;
+        for (int y=0 ; y <= pgmInf.height ; y++) {
+            int x = Math.round( m*y + b );
+            if (pgmInf.img[x][y] > max) { return false;}
+        }
     }
 
-    static Boolean fileExists(String fileName) {
-       return true; 
-    }
-
-    static Boolean lineBetween(int x1, int y1, int x2, int y2) {
-        return true; 
-    }
+    return true; 
+}
 
     static Boolean pointInPgm(int x, int y) {
         return (x >= 0 ) && (y >= 0) && (x <= pgmInf.width) && (y <= pgmInf.height);
@@ -244,4 +261,4 @@ class PgmImageInfo {
 }
 class DateInvalidException extends Exception {
     public DateInvalidException(String msg) { super(msg); }
-  }
+}
