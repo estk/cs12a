@@ -51,6 +51,11 @@ public class Terrain {
         }
     }
 
+/**************************************************/
+/*                   ACTIONS                      */
+/**************************************************/
+
+
     static void save() {
         String fileName; char answer;
         System.out.println("Enter file name to save: "); fileName = scan.nextLine();
@@ -99,33 +104,46 @@ public class Terrain {
             System.out.println("Point 2 is not visible from point 1.");
     }
 
-static void visible() {
-    
-}
-
-static Boolean lineBetween(int x1, int y1, int x2, int y2) {
-    int max;
-    double m, b;
-    
-    m = (y1-y2)/(x1-x2); b = y1 - m * x1;
-    if ( b >= 0 ) {
-        // y = mx + b
-        for (int x=0 ; x <= pgmInf.width ; x++) {
-            int y = Math.round( m*x + b );
-            if (pgmInf.img[x][y] > max ) { return false; }
+    static void visible() {
+        int x, y;
+        int[][] res = pgmInf.img.clone();
+        System.out.print("Enter reference point: ");
+        x = scan.nextInt(); y = scan.nextInt();
+        System.out.printf("Marking all pixels visible from %d,%d as white.\n", x, y);
+        // mark visible points
+        for (int i=0 ; i < pgmInf.width ; i++) {
+            for (int j=0 ; j < pgmInf.height ; j++) {
+                if ( lineBetween(x, y, i, j) ) res[i][j] = 0;
+            }
         }
-    }
-    else {
-        // x = my + b
-        m = (x1-x2)/(y1-y2); b = x1 - m * y1;
-        for (int y=0 ; y <= pgmInf.height ; y++) {
-            int x = Math.round( m*y + b );
-            if (pgmInf.img[x][y] > max) { return false;}
-        }
+        System.out.println("Done.");
     }
 
-    return true; 
-}
+/**************************************************/
+
+    static Boolean lineBetween(int x1, int y1, int x2, int y2) {
+        int max = pgmInf.img[x1][y1];
+        double m, b;
+    
+        m = (y1-y2)/(x1-x2); b = y1 - m * x1;
+        if ( b >= 0 ) {
+            // y = mx + b
+            for (int x=0 ; x <= pgmInf.width ; x++) {
+                int y = (int)Math.round( m*x + b );
+                if (pgmInf.img[x][y] > max ) { return false; }
+            }
+        }
+        else {
+            // x = my + b
+            m = (x1-x2)/(y1-y2); b = x1 - m * y1;
+            for (int y=0 ; y <= pgmInf.height ; y++) {
+                int x = (int)Math.round( m*y + b );
+                if (pgmInf.img[x][y] > max) { return false;}
+            }
+        }
+
+        return true; 
+    }
 
     static Boolean pointInPgm(int x, int y) {
         return (x >= 0 ) && (y >= 0) && (x <= pgmInf.width) && (y <= pgmInf.height);
@@ -151,13 +169,13 @@ static Boolean lineBetween(int x1, int y1, int x2, int y2) {
 
 
 //********************************************// 
-    // Imports you will need to include
-    // import java.io.*;
-    // import java.util.ArrayList;
+// Imports you will need to include
+// import java.io.*;
+// import java.util.ArrayList;
 
-    /**
-    * Inner class to wrap up the PGM file attributes into a single object for easier access
-    */
+/**
+* Inner class to wrap up the PGM file attributes into a single object for easier access
+*/
 class PgmImageInfo {
         public ArrayList comments = new ArrayList();
         public int maxValue = 0, width, height;
@@ -231,7 +249,7 @@ class PgmImageInfo {
         // set width and height
         width = img.length;
         height = img[0].length;
-}
+    }
     public void savePgmFileAs(String filename) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
