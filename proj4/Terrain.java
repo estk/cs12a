@@ -37,7 +37,6 @@ public class Terrain {
             while (line.length() < 1) {
                 line = scan.nextLine().toUpperCase();
             }
-            System.out.println(line); // debuging
             char action = line.charAt(0);
             switch (action) {
                 case 'Q':
@@ -63,7 +62,7 @@ public class Terrain {
 
     static void save() {
         String fileName, line = ""; char answer;
-        System.out.println("Enter file name to save: "); fileName = scan.nextLine();
+        System.out.print("Enter file name to save: "); fileName = scan.nextLine();
         File file = new File(fileName);
         
         if ( file.isFile() ) {
@@ -72,7 +71,6 @@ public class Terrain {
             while (line.length() < 1) {
                 line = scan.nextLine().toUpperCase();
             }
-            System.out.println(line); // debuging
             answer = line.charAt(0);
 
             switch (answer) {
@@ -86,27 +84,31 @@ public class Terrain {
     }
 
     static void fill() {
-        int x, y, height;
-        System.out.print("Enter reference point: ");
-        x = scan.nextInt(); y = scan.nextInt();
-        // calcs
-        if ( ! pointInPgm( x, y ) ) {
-            System.out.println("WARNING: reference point is not in terrain.");
-            fill();
-        }
-        height = getPixValue(x, y);
+        int xRef, yRef, height;
+        Boolean inPgm = false;
+        do {
+          System.out.print("Enter reference point: ");
+          xRef = scan.nextInt();
+          yRef = scan.nextInt();
+          scan.nextLine();
+          // calcs
+          inPgm = pointInPgm(xRef,yRef);
+          if ( ! inPgm ) {
+              System.out.println("WARNING: reference point is not in terrain.");
+          }
+        } while (!inPgm);
+        height = pgmInf.img[yRef][xRef];
         System.out.printf("Marking all pixels below %d as 0, and others as %d.\n", height, (pgmInf.maxValue / 2) );
         fillGt( height );
-        
         System.out.println("Done.");
     }
 
     static void line() {
         int x1, x2, y1, y2;
         System.out.print("Enter point 1: ");
-        x1 = scan.nextInt(); y1 = scan.nextInt();
+        y1 = scan.nextInt(); x1 = scan.nextInt(); scan.nextLine();
         System.out.print("Enter point 2: ");
-        x2 = scan.nextInt(); y2 = scan.nextInt();
+        y2 = scan.nextInt(); x2 = scan.nextInt(); scan.nextLine();
 
         if (lineBetween(x1, y1, x2, y2))
             System.out.println("Point 2 is visible from point 1.");
@@ -118,18 +120,15 @@ public class Terrain {
         int x, y;
         int[][] res = deepClone( pgmInf.img );
         System.out.print("Enter reference point: ");
-        x = scan.nextInt(); y = scan.nextInt();
+        y = scan.nextInt(); x = scan.nextInt(); scan.nextLine();
         System.out.printf("Marking all pixels visible from %d,%d as white.\n", x, y);
         // mark visible points
         for (int i=0 ; i < pgmInf.width ; i++) {
             for (int j=0 ; j < pgmInf.height ; j++) {
-                System.out.println(i + " : " + j); // debugging
-                if ( lineBetween(x, y, i, j) ) { res[j][i] = 9; System.out.print("no line"); }
+                if ( lineBetween(x, y, i, j) ) res[j][i] = 9;
             }
-            System.out.print( pgmInf.toString() );
         }
         pgmInf.img = res;
-        System.out.println(pgmInf.toString());
         System.out.println("Done.");
     }
 
@@ -149,9 +148,7 @@ public class Terrain {
 
         if (x1 == x2) {
             // x = c
-            System.out.println("// x = c"); //debugging
             for (int y=ymin ; y < ymax ; y++) {
-                System.out.println(x1 +" : "+ y); //debugging
                 if (pgmInf.img[y][x1] > max) return false;
             }
         }
@@ -161,28 +158,23 @@ public class Terrain {
 
             if (m > -1 && m < 1) {
                 // y = mx + b
-                System.out.println("// y = mx + b"); //debugging
                 for (int x=xmin ; x < xmax ; x++) {
                     int y = (int)Math.round( m * (double)x + b );
-                    System.out.println(x +" : "+ y + " :: "+ pgmInf.img[y][x] + "max:"+ max ); //debugging
-                    System.out.println("endpts:" + pgmInf.img[y1][x1] + " and " + pgmInf.img[y2][x2]);
                     if (pgmInf.img[y][x] > max ) return false;
                 }
             }
             else {
                  // x = my + b
-                System.out.println("// x = my + b"); //debugging
                 top = (x1-x2); bot = (y1-y2); 
                 m = top / bot; b = x1 - m * (double)y1;
                 for (int y=ymin ; y < ymax ; y++) {
                     int x = (int)Math.round( m* (double)y + b );
-                    System.out.println(x +" : "+ y); //debugging
                     if (pgmInf.img[y][x] > max) return false;
-                }               
+                }
             }
         }
 
-        return true; 
+        return true;
     }
 
     static Boolean pointInPgm(int x, int y) {
@@ -312,7 +304,6 @@ class PgmImageInfo {
 
     public String toString() {
         String res = "";
-        System.out.println(width + " " + height); // debuging
         for (int i=0 ; i < width ; i++) {
             for (int j=0 ; j < height ; j++) {
                 res += this.img[i][j] + " ";

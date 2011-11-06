@@ -51,7 +51,11 @@ public class TerrainTests {
     public void testLinePrb() {
         assertFalse( Terrain.lineBetween(4, 4, 5, 1) );
         assertFalse( Terrain.lineBetween(4, 4, 3, 7) );
-        
+    }
+    @Test
+    public void testLine0() {
+        assertFalse( Terrain.lineBetween(0, 0, 2, 0) );
+        assertTrue(  Terrain.lineBetween(0, 0, 3, 0) );
     }
 
 }
