@@ -159,11 +159,11 @@ public class Terrain {
             double top = (y1-y2), bot = (x1-x2);
             m = top / bot; b = y1 - m * (double)x1;
 
-            if (b <= pgmInf.height*2 && b > 0) {
+            if (m > -1 && m < 1) {
                 // y = mx + b
                 System.out.println("// y = mx + b"); //debugging
                 for (int x=xmin ; x < xmax ; x++) {
-                    int y = (int)Math.round( m * (double)x + (double)b );
+                    int y = (int)Math.round( m * (double)x + b );
                     System.out.println(x +" : "+ y + " :: "+ pgmInf.img[y][x] + "max:"+ max ); //debugging
                     System.out.println("endpts:" + pgmInf.img[y1][x1] + " and " + pgmInf.img[y2][x2]);
                     if (pgmInf.img[y][x] > max ) return false;
@@ -172,7 +172,8 @@ public class Terrain {
             else {
                  // x = my + b
                 System.out.println("// x = my + b"); //debugging
-                m = (x1-x2)/(y1-y2); b = x1 - m * y1;
+                top = (x1-x2); bot = (y1-y2); 
+                m = top / bot; b = x1 - m * (double)y1;
                 for (int y=ymin ; y < ymax ; y++) {
                     int x = (int)Math.round( m* (double)y + b );
                     System.out.println(x +" : "+ y); //debugging
@@ -229,7 +230,7 @@ class PgmImageInfo {
      * @return A PgmImageInfo object containing the representation of the PGM file
      */
     public PgmImageInfo(String filename)
-    throws DateInvalidException, IOException
+    throws PgmReadException, IOException
     {
         BufferedReader reader = new BufferedReader(new FileReader(new File(filename)));
 
@@ -238,7 +239,7 @@ class PgmImageInfo {
 
         if(fileType == null || !fileType.equalsIgnoreCase("P2")) {
                 System.out.println("readPgmFile: Wrong file type!");
-                throw new DateInvalidException("readPgmFile: Wrong file type!");
+                throw new PgmReadException("readPgmFile: Wrong file type!");
         }
 
 
@@ -247,7 +248,7 @@ class PgmImageInfo {
 
         if(imageSizeString == null) {
                 System.out.println("readPgmFile: No Image Dimensions!");
-                throw new DateInvalidException("readPgmFile: No Image Dimensions!");
+                throw new PgmReadException("readPgmFile: No Image Dimensions!");
         }
 
         // bypass any comments
@@ -263,7 +264,7 @@ class PgmImageInfo {
 
         if(tokens.length != 2) {
                 System.out.println("readPgmFile: Incorrrect Image Dimension Definitions!");
-                throw new DateInvalidException("readPgmFile: Incorrrect Image Dimension Definitions!");
+                throw new PgmReadException("readPgmFile: Incorrrect Image Dimension Definitions!");
         }
 
         // create and populate the image array
@@ -321,6 +322,6 @@ class PgmImageInfo {
         return res;
     }
 }
-class DateInvalidException extends Exception {
-    public DateInvalidException(String msg) { super(msg); }
+class PgmReadException extends Exception {
+    public PgmReadException(String msg) { super(msg); }
 }
