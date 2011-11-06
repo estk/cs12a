@@ -116,7 +116,7 @@ public class Terrain {
 
     static void visible() {
         int x, y;
-        int[][] res = pgmInf.img.clone();
+        int[][] res = deepClone( pgmInf.img );
         System.out.print("Enter reference point: ");
         x = scan.nextInt(); y = scan.nextInt();
         System.out.printf("Marking all pixels visible from %d,%d as white.\n", x, y);
@@ -124,50 +124,60 @@ public class Terrain {
         for (int i=0 ; i < pgmInf.width ; i++) {
             for (int j=0 ; j < pgmInf.height ; j++) {
                 System.out.println(i + " : " + j); // debugging
-                if ( lineBetween(x, y, i, j) ) res[i][j] = 0;
-                System.out.println(i + " : " + j + " : " + lineBetween(x, y, i, j) ); // debugging
+                if ( lineBetween(x, y, i, j) ) { res[j][i] = 9; System.out.print("no line"); }
             }
+            System.out.print( pgmInf.toString() );
         }
         pgmInf.img = res;
+        System.out.println(pgmInf.toString());
         System.out.println("Done.");
     }
 
 /**************************************************/
+    static int[][] deepClone(int[][] ary) {
+        int [][] res = new int[ary.length][];
+        for(int j=0 ; j < ary.length; j++)
+            res[j] = ary[j].clone();
+        return res;
+    }
 
     static Boolean lineBetween(int x1, int y1, int x2, int y2) {
-        int max = Math.max( pgmInf.img[x1][y1], pgmInf.img[x2][y2] );
+        int max = Math.max( pgmInf.img[y1][x1], pgmInf.img[y2][x2] );
         double m, b;
+        int xmin = Math.min(x1, x2), xmax = Math.max(x1, x2);
+        int ymin = Math.min(y1, y2), ymax = Math.max(y1, y2);
 
         if (x1 == x2) {
             // x = c
             System.out.println("// x = c"); //debugging
-            for (int y=0 ; y < pgmInf.height ; y++) {
+            for (int y=ymin ; y < ymax ; y++) {
                 System.out.println(x1 +" : "+ y); //debugging
-                if (pgmInf.img[x1][y] > max) return false;
-            }
-            return true;
-        }
-    
-        m = (y1-y2)/(x1-x2); b = y1 - m * x1;
-        if ( m >= 0 ) {
-            // y = mx + b
-            System.out.println("// y = mx + b"); //debugging
-            for (int x=0 ; x < pgmInf.width ; x++) {
-                int y = (int)Math.round( m*x + b );
-                System.out.println(x +" : "+ y); //debugging
-                if (y < 0 || y >= pgmInf.height) continue;
-                else if (pgmInf.img[x][y] > max ) return false;
+                if (pgmInf.img[y][x1] > max) return false;
             }
         }
         else {
-            // x = my + b
-            System.out.println("// x = my + b"); //debugging
-            m = (x1-x2)/(y1-y2); b = x1 - m * y1;
-            for (int y=0 ; y < pgmInf.height ; y++) {
-                int x = (int)Math.round( m*y + b );
-                System.out.println(x +" : "+ y); //debugging
-                if (x < 0 || x >= pgmInf.width) continue;
-                else if (pgmInf.img[x][y] > max) return false;
+            double top = (y1-y2), bot = (x1-x2);
+            m = top / bot; b = y1 - m * (double)x1;
+
+            if (b <= pgmInf.height*2 && b > 0) {
+                // y = mx + b
+                System.out.println("// y = mx + b"); //debugging
+                for (int x=xmin ; x < xmax ; x++) {
+                    int y = (int)Math.round( m * (double)x + (double)b );
+                    System.out.println(x +" : "+ y + " :: "+ pgmInf.img[y][x] + "max:"+ max ); //debugging
+                    System.out.println("endpts:" + pgmInf.img[y1][x1] + " and " + pgmInf.img[y2][x2]);
+                    if (pgmInf.img[y][x] > max ) return false;
+                }
+            }
+            else {
+                 // x = my + b
+                System.out.println("// x = my + b"); //debugging
+                m = (x1-x2)/(y1-y2); b = x1 - m * y1;
+                for (int y=ymin ; y < ymax ; y++) {
+                    int x = (int)Math.round( m* (double)y + b );
+                    System.out.println(x +" : "+ y); //debugging
+                    if (pgmInf.img[y][x] > max) return false;
+                }               
             }
         }
 
@@ -179,18 +189,18 @@ public class Terrain {
     }
 
     static int getPixValue(int x, int y) {
-        return pgmInf.img[x][y];
+        return pgmInf.img[y][x];
     }
 
     static void fillGt(int height) {
         int pixel;
         for (int x=0 ; x < pgmInf.width ; x++) {
             for (int y=0 ; y < pgmInf.height ; y++) {
-                pixel = pgmInf.img[x][y]; 
+                pixel = pgmInf.img[y][x]; 
                 if ( pixel < height)
-                    pgmInf.img[x][y] = 0;
+                    pgmInf.img[y][x] = 0;
                 else {
-                    pgmInf.img[x][y] = pgmInf.maxValue / 2;
+                    pgmInf.img[y][x] = pgmInf.maxValue / 2;
                 }
             }
         }
@@ -278,8 +288,8 @@ class PgmImageInfo {
         img = pgmArray;
 
         // set width and height
-        width = img.length;
-        height = img[0].length;
+        height = img.length;
+        width = img[0].length;
     }
     public void savePgmFileAs(String filename) {
         try {
