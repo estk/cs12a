@@ -1,3 +1,11 @@
+/********************************/
+/* Program: Matrices            */
+/* Author: Evan Simmons         */
+/* CMP 12A/L, Fall 2011         */
+/* November 9th, 2011           */
+/*                              */
+/********************************/
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -52,6 +60,9 @@ public class Matrix {
         }
     }
 
+    /**
+    * Converts a matrix to a string.
+    */
     private static String toString(int[][] matrix) {
         String res = "";
         for (int[] row : matrix) {
@@ -62,6 +73,9 @@ public class Matrix {
         return res;
     }
 
+    /**
+    * Converts a vector to a string.
+    */
     private static String toString(int[] vector) {
         String res = "";
         for (int x : vector)
@@ -69,6 +83,9 @@ public class Matrix {
         return res;
     }
     
+    /**
+    * Compute's the dot product of a vector and a matrix
+    */
     private static int[] computeDotProduct(int[] vector, int[][] matrix)
     throws Exception {
         if (vector.length != matrix[0].length) throw new Exception();
@@ -78,6 +95,9 @@ public class Matrix {
         return res;
     }
 
+    /**
+    * Compute's the dot product of two vectors.
+    */
     private static int computeDotProduct(int[] v1, int[] v2)
     throws Exception {
         if (v1.length != v2.length) throw new Exception();
@@ -86,7 +106,10 @@ public class Matrix {
             res += v1[i]*v2[i];
         return res;
     }
-
+    
+    /**
+    * Returns the specified column number of a matrix as a vector.
+    */
     private static int[] columnToVector(int[][] matrix, int col)
     throws Exception {
         if (col > matrix.length) throw new Exception();
@@ -96,6 +119,9 @@ public class Matrix {
         return res;
     }
     
+    /**
+    * Compute's the matrix product of two matrices.
+    */
     private static int[][] computeMatrixProduct(int[][] matrix1, int[][] matrix2)
     throws Exception {
         if (matrix1[0].length != matrix2.length) throw new Exception();
