@@ -1,10 +1,29 @@
+/********************************/
+/* Program: Terrain Processor   */
+/* Author: Evan Simmons         */
+/* CMP 12A/L, Fall 2011         */
+/* November 9th, 2011            */
+/*                              */
+/* See javadoc for more info    */
+/********************************/
+
 import java.io.*;
 import java.util.*;
+
+/**
+* The Terrain class does a variety of operations on pgm files.
+* <p>
+* This class was written to be used interactively via the console.
+* @author Evan Simmons
+*/
 
 public class Terrain {
     static PgmImageInfo pgmInf;
     static Scanner scan = new Scanner( System.in );
 
+    /**
+    * The main() function loads a pgm, and then prompts the user for an action.
+    */
     public static void main(String[] args) {
         // Interact
         System.out.println("Welcome to my terrain checker:");
@@ -12,6 +31,9 @@ public class Terrain {
         System.out.println("Bye.");
     }
 
+    /**
+    * Loads a pgm file interactively.
+    */
     static void loadPgm() {
         String file;
         try {
@@ -29,14 +51,19 @@ public class Terrain {
         }
     }
 
+    /**
+    * Prompts the user for an action.
+    * <p>
+    * Choices are: (S)ave, (F)ill, (L)ine, (V)isible, (Q)uit.
+    * Each action corresponds with a method in this class.
+    */
     static void actionPrompt() {
         prompt:
         while (true) {
             String line = "";
             System.out.println("\nWhat do you want to do: (S)ave, (F)ill, (L)ine, (V)isible, (Q)uit: ");
-            while (line.length() < 1) {
+            while (line.length() < 1)
                 line = scan.nextLine().toUpperCase();
-            }
             char action = line.charAt(0);
             switch (action) {
                 case 'Q':
@@ -60,6 +87,11 @@ public class Terrain {
 /**************************************************/
 
 
+    /**
+    * Prompts the user to choose a filename to save as.
+    * Checks for existance of the file, and prompts the
+    * user whether to overwrite it.
+    */
     static void save() {
         String fileName, line = ""; char answer;
         System.out.print("Enter file name to save: "); fileName = scan.nextLine();
@@ -68,14 +100,13 @@ public class Terrain {
         if ( file.isFile() ) {
             System.out.printf("WARNING: %s exists.\n", fileName);
             System.out.print("Overwrite (y/n)? ");
-            while (line.length() < 1) {
-                line = scan.nextLine().toUpperCase();
-            }
+            
+            while (line.length() < 1) line = scan.nextLine().toUpperCase();
             answer = line.charAt(0);
 
             switch (answer) {
-                case 'N': save();
-                case 'Y': break;
+                case 'N': save(); // reprompt
+                case 'Y': break;  // save the file
                 default: save();
             }
         }
@@ -83,44 +114,63 @@ public class Terrain {
         System.out.println("Terrain file saved.");
     }
 
+    /**
+    * Prompts the user for a pixel location.
+    * Checks if the pixel is in the pgm.
+    * Fills all pixels below the specified pixel's
+    * height to zero, and all others to grey.
+    */
     static void fill() {
         int xRef, yRef, height;
-        Boolean inPgm = false;
-        do {
+
+        while (true) {
           System.out.print("Enter reference point: ");
           xRef = scan.nextInt();
           yRef = scan.nextInt();
-          scan.nextLine();
+          scan.nextLine(); // flush
           // calcs
-          inPgm = pointInPgm(xRef,yRef);
-          if ( ! inPgm ) {
-              System.out.println("WARNING: reference point is not in terrain.");
-          }
-        } while (!inPgm);
+          if ( pointInPgm(xRef, yRef) ) break;
+          System.out.println("WARNING: reference point is not in terrain.");
+        }
+
         height = pgmInf.img[yRef][xRef];
         System.out.printf("Marking all pixels below %d as 0, and others as %d.\n", height, (pgmInf.maxValue / 2) );
         fillGt( height );
         System.out.println("Done.");
     }
 
+    /**
+    * Prompts for two pixels, checks if there is a line
+    * of sight between them. 
+    */
     static void line() {
         int x1, x2, y1, y2;
+        String m = "";
+        
         System.out.print("Enter point 1: ");
         y1 = scan.nextInt(); x1 = scan.nextInt(); scan.nextLine();
+
         System.out.print("Enter point 2: ");
         y2 = scan.nextInt(); x2 = scan.nextInt(); scan.nextLine();
 
-        if (lineBetween(x1, y1, x2, y2))
-            System.out.println("Point 2 is visible from point 1.");
-        else
-            System.out.println("Point 2 is not visible from point 1.");
+        if ( ! lineBetween(x1, y1, x2, y2) ) m = " not";
+
+        System.out.printf("Point 2 is%s visible from point 1.\n", m);
     }
 
+    /**
+    * Prompts for a pixel. Marks all pixels visible
+    * from the reference as white.
+    */
     static void visible() {
         int x, y;
         int[][] res = deepClone( pgmInf.img );
+
         System.out.print("Enter reference point: ");
-        y = scan.nextInt(); x = scan.nextInt(); scan.nextLine();
+        y = scan.nextInt();
+        x = scan.nextInt();
+        scan.nextLine(); // flush
+        
         System.out.printf("Marking all pixels visible from %d,%d as white.\n", x, y);
         // mark visible points
         for (int i=0 ; i < pgmInf.width ; i++) {
@@ -133,13 +183,24 @@ public class Terrain {
     }
 
 /**************************************************/
+/*                    HELPERS                     */
+/**************************************************/
+
+    /**
+    * Clone the elements of each row of a 2d array.
+    */
     static int[][] deepClone(int[][] ary) {
         int [][] res = new int[ary.length][];
+
         for(int j=0 ; j < ary.length; j++)
             res[j] = ary[j].clone();
         return res;
     }
 
+    /**
+    * Determines if there is a line of sight between
+    * (@x1, @y1) and (@x2, @y2).
+    */
     static Boolean lineBetween(int x1, int y1, int x2, int y2) {
         int max = Math.max( pgmInf.img[y1][x1], pgmInf.img[y2][x2] );
         double m, b;
@@ -177,14 +238,24 @@ public class Terrain {
         return true;
     }
 
+    /**
+    * Determines if a point is in the current pgm.
+    */
     static Boolean pointInPgm(int x, int y) {
         return (x >= 0 ) && (y >= 0) && (x <= pgmInf.width) && (y <= pgmInf.height);
     }
 
+    /**
+    * Returns the specified pixel's value.
+    */
     static int getPixValue(int x, int y) {
         return pgmInf.img[y][x];
     }
-
+    
+    /**
+    * Fills all pixels greater than or equal to @height to grey.
+    * Fills all other pixels to 0.
+    */
     static void fillGt(int height) {
         int pixel;
         for (int x=0 ; x < pgmInf.width ; x++) {
@@ -192,9 +263,8 @@ public class Terrain {
                 pixel = pgmInf.img[y][x]; 
                 if ( pixel < height)
                     pgmInf.img[y][x] = 0;
-                else {
+                else
                     pgmInf.img[y][x] = pgmInf.maxValue / 2;
-                }
             }
         }
     }
@@ -203,12 +273,10 @@ public class Terrain {
 
 
 //********************************************// 
-// Imports you will need to include
-// import java.io.*;
-// import java.util.ArrayList;
 
 /**
-* Inner class to wrap up the PGM file attributes into a single object for easier access
+* Separate class to wrap up the PGM file attributes into a single object for easier access.
+* I modified this to add some abstraction, and to throw exceptions.
 */
 class PgmImageInfo {
         public ArrayList comments = new ArrayList();
@@ -284,6 +352,7 @@ class PgmImageInfo {
         height = img.length;
         width = img[0].length;
     }
+
     public void savePgmFileAs(String filename) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
@@ -301,13 +370,13 @@ class PgmImageInfo {
             System.out.println("readPgmFile: failed to read file!  Error: " + e.getLocalizedMessage());
         }
     }
-
+// use shortcut for loop
     public String toString() {
         String res = "";
-        for (int i=0 ; i < width ; i++) {
-            for (int j=0 ; j < height ; j++) {
-                res += this.img[i][j] + " ";
-            }
+        
+        for ( int[] row : img ) {
+            for ( int x : row )
+                res += x + " ";
             res += "\n";
         }
         return res;
