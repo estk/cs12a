@@ -202,39 +202,41 @@ public class Terrain {
     * (@x1, @y1) and (@x2, @y2).
     */
     static Boolean lineBetween(int x1, int y1, int x2, int y2) {
-        int max = Math.max( pgmInf.img[y1][x1], pgmInf.img[y2][x2] );
-        double m, b;
+        double m, b; // for line eqn.
+        int maxV = Math.max( pgmInf.img[y1][x1], pgmInf.img[y2][x2] );
         int xmin = Math.min(x1, x2), xmax = Math.max(x1, x2);
         int ymin = Math.min(y1, y2), ymax = Math.max(y1, y2);
 
         if (x1 == x2) {
             // x = c
-            for (int y=ymin ; y < ymax ; y++) {
-                if (pgmInf.img[y][x1] > max) return false;
-            }
+            for (int y=ymin ; y < ymax ; y++)
+                if (pgmInf.img[y][x1] > maxV) return false;
         }
         else {
+            // setup for y=mx + b form
             double top = (y1-y2), bot = (x1-x2);
-            m = top / bot; b = y1 - m * (double)x1;
+            m = top / bot; 
 
             if (m > -1 && m < 1) {
                 // y = mx + b
+                b = y1 - m * (double)x1;
+
                 for (int x=xmin ; x < xmax ; x++) {
                     int y = (int)Math.round( m * (double)x + b );
-                    if (pgmInf.img[y][x] > max ) return false;
+                    if (pgmInf.img[y][x] > maxV ) return false;
                 }
             }
             else {
                  // x = my + b
                 top = (x1-x2); bot = (y1-y2); 
                 m = top / bot; b = x1 - m * (double)y1;
+
                 for (int y=ymin ; y < ymax ; y++) {
                     int x = (int)Math.round( m* (double)y + b );
-                    if (pgmInf.img[y][x] > max) return false;
+                    if (pgmInf.img[y][x] > maxV) return false;
                 }
             }
         }
-
         return true;
     }
 
