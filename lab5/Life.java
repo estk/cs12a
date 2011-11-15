@@ -1,3 +1,11 @@
+/********************************/
+/* Program: Life (lab5)         */
+/* Author: Evan Simmons         */
+/* CMP 12A/L, Fall 2011         */
+/* November 15th, 2011           */
+/*                              */
+/********************************/
+
 import java.util.*;
 
 class Life {
