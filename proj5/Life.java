@@ -74,11 +74,21 @@ class Life {
 
 
     protected static void moveHungrys() {
-        
+        for (int i=0 ; i < hungryList.length ; i++) {
+            move(hungryList[i]);
+        }
     }
 
     protected static void moveYummys() {
-        
+        for (int i=0 ; i < yummyList.length ; i++) {
+            move(yummyList[i]);
+        }
+    }
+
+    protected static void move(HungryCritter hungry) {
+    }
+
+    protected static void move(YummyCritter yummy) {
     }
 
 
