@@ -15,43 +15,59 @@ class HungryCritter extends Critter {
 
         for (int i = 0; i < Life.yummyList.length; i++) {
             if(Math.abs(Life.yummyList[i].x-this.x)<=1 && Math.abs(Life.yummyList[i].y-this.y)<=1){
-                eat(position,i);
+                eat(Life.yummyList[i].x, Life.yummyList[i].y, i);
                 return;
             }
         }
 
-        
+        System.out.println("DEBUG: checked for yummy critters in view."); // debug
         // code fragment to check if cells within a 7x7 window
         // note: there are 9 = 3x3 - 1 candidate cells
 
         while (repeat) {
+        System.out.println("DEBUG: starting random loop. (hungry)"); // debug
             line = null;
-            // get a random number between 0..47
+            // get a random number between 0..9
             randomNum = Life.random.nextInt(9);
             // turn this value to be 0..23 and 25..48
-            // position 24 is the center of the 7x7 window
+            // position 4 is the center of the 7x7 window
             if (randomNum > 4)
                 randomNum++;
             // convert that to a coordinate in a 7x7 window
-            xCoor = x - 3 + randomNum / 3;
-            yCoor = y - 3 + randomNum % 3;
+            yCoor = y - 1 + randomNum / 3; // row
+            xCoor = x - 1 + randomNum % 3; // column
+
+            System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
 
             if ( Life.kosherCoords(xCoor, yCoor) )
                 // xCoor and yCoor are inside the terrain and
                 // not currently occupied by another critter )
             {
+                System.out.println("coords are kosher"); // debug
                 // check to see if that location is visible
-                int[] ref1 = {terrain[x][y], x, y};
-                int[] ref2 = {terrain[xCoor][yCoor],xCoor, yCoor};
+                int[] ref1 = {terrain[y][x], y, x};
+                int[] ref2 = {terrain[yCoor][xCoor],yCoor, xCoor};
                 line = clearLine(terrain, ref1, ref2);
+                System.out.println("there is a clearline"); // debug
                 if(line!=null)
                     repeat = false;
             }
         }
+        System.out.println("Exited random loop.");
+        moveTo(xCoor, yCoor);
+    }
+    void moveTo(int xCoor, int yCoor) {
+        System.out.println("MOVED TO: "); // debug
+        System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
+
+
+        
         x = xCoor;
         y = yCoor;
     }
 
-    void eat(int[] pos, int i) {
+    void eat(int xCoor, int yCoor, int i) {
+        System.out.println("EATEN AT: "); // debug
+        System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
     }
 }

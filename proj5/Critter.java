@@ -80,6 +80,16 @@ public class Critter {
                     l[i][1] = line.get(i)[1];
             }
             return l;
+    }   
+    
+    void moveTo(int xCoor, int yCoor) {
+        System.out.println("MOVED TO: "); // debug
+        System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
+
+
+
+        x = xCoor;
+        y = yCoor;
     }
 }
 

@@ -23,6 +23,7 @@ class Life {
         System.out.println("Let's rid the world of hunger!");    
         // read pgm
         terrain = readInFile();
+        if (terrain == null) { System.out.println("pgm not valid"); return; }
         ppm = pgmToPpm(terrain);
         // Get critter info
         numHungry = getHungry();
@@ -38,23 +39,27 @@ class Life {
     }
 
     static void runSimulation() {
+        System.out.println("DEBUG: entered runSimulation()"); // debug
         critterMap = new boolean[terrain.length][terrain[0].length];
         // make hungry
         createHungryCritters(numHungry, critterMap);
         // make yummy
         createYummyCritters(numYummy, critterMap);
         // save original state
+        System.out.println("DEBUG: created maps."); // debug
         saveState();
 
         run(numSteps);
     }
 
     static void run(int steps) {
+        System.out.println("DEBUG: entered run()."); // debug
         try {
             for (int i=0 ; i < steps ; i++) {
                 moveHungrys();
                 moveYummys();
             }
+            saveState();
         }
         catch (CritterListException  e) {
             System.out.println(e.getLocalizedMessage());
@@ -79,6 +84,7 @@ class Life {
 
     static void moveHungrys()
     throws CritterListException {
+        System.out.println("DEBUG: entered moveHungrys()."); // debug
         for (int i=0 ; i < hungryList.length ; i++) {
             hungryList[i].move(terrain);
         }
@@ -86,16 +92,25 @@ class Life {
 
     static void moveYummys()
     throws CritterListException {
+        System.out.println("DEBUG: entered moveYummys()."); // debug
         for (int i=0 ; i < yummyList.length ; i++) {
             yummyList[i].move(terrain);
         }
     }
 
     static boolean kosherCoords(int xCoor, int yCoor) {
-        return false; // todo
+        if ( yCoor < 0 || xCoor < 0) return false;
+        if ( yCoor < terrain.length && xCoor < terrain[0].length ) {
+            System.out.println("critterMap :: rows: " + critterMap.length + " columns: " + critterMap[0].length); // debug
+            System.out.println("terrain :: rows: " + terrain.length + " columns: " + terrain[0].length); // debug
+            System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
+            return ! critterMap[yCoor][xCoor];
+        }
+        return false;
     }
 
     static void saveState() {
+        System.out.println("State save faked"); // debug
     }
 
 
@@ -182,11 +197,14 @@ class Life {
     }
 
     static int[][][] pgmToPpm(int[][] terrain) {
-        int[][][] res= null;
+        int[][][] res= new int[terrain.length][terrain[0].length][3];
+        int tmp;
+        System.out.println("DEBUG: " + terrain); // debug
 
         for (int j=0; j<terrain.length; j++) {
             for (int i=0; i<terrain[0].length; i++) {
-                res[j][i] = new int[] { i, i, i };
+                tmp = terrain[j][i];
+                res[j][i] = new int[] { tmp, tmp, tmp };
             }
         }
         return res;
@@ -203,4 +221,3 @@ class Life {
     }
 
 }
-
