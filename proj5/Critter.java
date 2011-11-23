@@ -81,16 +81,6 @@ public class Critter {
             }
             return l;
     }   
-    
-    void moveTo(int xCoor, int yCoor) {
-        System.out.println("MOVED TO: "); // debug
-        System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
-
-
-
-        x = xCoor;
-        y = yCoor;
-    }
 }
 
 class CritterListException extends Exception {

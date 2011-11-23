@@ -8,7 +8,7 @@ class YummyCritter extends Critter {
         boolean repeat = true;
         int randomNum, xCoor= -1, yCoor= -1; 
         int[] position;
-        int[][] line;
+        int[][] line = null;
 
         // code fragment to check if cells within a 7x7 window
         // note: there are 48 = 7x7 - 1 candidate cells
@@ -39,6 +39,20 @@ class YummyCritter extends Critter {
             }
         }
         System.out.println("Exited random loop.");
-        moveTo(xCoor, yCoor);
+        mark(line);
+    }
+
+    void mark(int[][] line) {
+        System.out.println("MOVED TO: "); // debug
+        
+        for (int i=0 ; i < line.length ; i++)
+            Life.makeBlue(line[i][0], line[i][1]);
+        
+        Life.critterMap[y][x] = false;
+
+        this.x = line[line.length-1][0];
+        this.y = line[line.length-1][1];
+
+        Life.critterMap[y][x] = true;
     }
 }

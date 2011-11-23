@@ -8,13 +8,18 @@ class HungryCritter extends Critter {
         boolean repeat = true;
         int randomNum, xCoor = -1, yCoor = -1; 
         int[] position = {0, 0};
-        int[][] line;
+        int[][] line = null;
         
         // check to see if any of the yummy critters are next to me
         // if more than one yummy critters are next to me, eat the first available one from yummyList
 
         for (int i = 0; i < Life.yummyList.length; i++) {
             if(Math.abs(Life.yummyList[i].x-this.x)<=1 && Math.abs(Life.yummyList[i].y-this.y)<=1){
+                xCoor = Life.yummyList[i].x; yCoor = Life.yummyList[i].y;
+                int[] refe1 = {terrain[y][x], y, x};
+                int[] refe2 = {terrain[yCoor][xCoor],yCoor, xCoor};
+                line = clearLine(terrain, refe1, refe2);
+                mark(line);
                 eat(Life.yummyList[i].x, Life.yummyList[i].y, i);
                 return;
             }
@@ -49,25 +54,35 @@ class HungryCritter extends Critter {
                 int[] ref2 = {terrain[yCoor][xCoor],yCoor, xCoor};
                 line = clearLine(terrain, ref1, ref2);
                 System.out.println("there is a clearline"); // debug
-                if(line!=null)
+                if(line!=null) {
                     repeat = false;
+                    mark(line);
+                }
             }
         }
         System.out.println("Exited random loop.");
-        moveTo(xCoor, yCoor);
     }
-    void moveTo(int xCoor, int yCoor) {
+    void mark(int[][] line) {
         System.out.println("MOVED TO: "); // debug
-        System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
-
-
+        System.out.println("line length" + line.length);
+        if (line.length == 0) return;
+        for (int i=0 ; i < line.length ; i++)
+            Life.makeBlue(line[i][0], line[i][1]);
         
-        x = xCoor;
-        y = yCoor;
+        Life.critterMap[y][x] = false;
+
+        this.x = line[line.length-1][0];
+        this.y = line[line.length-1][1];
+
+        Life.critterMap[y][x] = true;
     }
 
     void eat(int xCoor, int yCoor, int i) {
         System.out.println("EATEN AT: "); // debug
         System.out.println("xCoor: " + xCoor + "  :  yCoor: " + yCoor ); // debug
+
+        Life.critterMap[yCoor][xCoor] = false;
+        Life.makeRed(xCoor, yCoor);
+        Life.removeHungry(this);
     }
 }

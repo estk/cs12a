@@ -13,8 +13,8 @@ class Life {
     static int[] hungryC, yummyC;
     static int[][] terrain;
     static int[][][] ppm;
-    static HungryCritter[] hungryList;
-    static YummyCritter[] yummyList;
+    static public HungryCritter[] hungryList;
+    static public YummyCritter[] yummyList;
     static boolean[][] critterMap;
     public static Scanner scan = new Scanner(System.in);
     static Random random = new Random(0);
@@ -208,6 +208,19 @@ class Life {
             }
         }
         return res;
+    }
+
+    static void removeHungry(HungryCritter h) {
+        HungryCritter[] res = new HungryCritter[hungryList.length-1];
+        int i = 0;
+        for (HungryCritter hung : hungryList){
+            if (hung != h) {
+                res[i] = hung;
+                i++;
+            }
+        }
+        hungryList = res;
+            
     }
 
     static void makeRed(int xCoor, int yCoor) {
