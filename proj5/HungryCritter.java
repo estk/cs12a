@@ -1,6 +1,7 @@
 class HungryCritter extends Critter {
     public HungryCritter(int xCoor, int yCoor, int aPos) {
         super(xCoor, yCoor, aPos);
+        Life.makeBlue(xCoor, yCoor);
     }
 
     void move(int[][] terrain)

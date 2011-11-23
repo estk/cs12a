@@ -6,10 +6,10 @@
 /*                              */
 /********************************/
 import java.util.*;
-import java.io.File;
+import java.io.*;
 
 class Life {
-    static int numHungry, numYummy, numSteps, height, width, scale;
+    static int numHungry, numYummy, numSteps, height, width, scale, step;
     static int[] hungryC, yummyC;
     static int[][] terrain;
     static int[][][] ppm;
@@ -39,14 +39,14 @@ class Life {
     }
 
     static void runSimulation() {
-        System.out.println("DEBUG: entered runSimulation()"); // debug
+        // System.out.println("DEBUG: entered runSimulation()"); // debug
         critterMap = new boolean[terrain.length][terrain[0].length];
         // make hungry
         createHungryCritters(numHungry, critterMap);
         // make yummy
         createYummyCritters(numYummy, critterMap);
         // save original state
-        System.out.println("DEBUG: created maps."); // debug
+        // System.out.println("DEBUG: created maps."); // debug
         saveState();
 
         run(numSteps);
@@ -58,8 +58,8 @@ class Life {
             for (int i=0 ; i < steps ; i++) {
                 moveHungrys();
                 moveYummys();
+                saveState();
             }
-            saveState();
         }
         catch (CritterListException  e) {
             System.out.println(e.getLocalizedMessage());
@@ -110,7 +110,9 @@ class Life {
     }
 
     static void saveState() {
-        System.out.println("State save faked"); // debug
+        System.out.println("State save "); // debug
+        ppmToFile();
+        step += 1;
     }
 
 
@@ -233,4 +235,40 @@ class Life {
         ppm[xCoor][yCoor] = new int[] {0, 0, 255};
     }
 
+    static void ppmToFile() {
+        String filename = "tracks" + step + ".ppm";
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
+            // write filetype
+            writer.write("P3\n");
+            // write dimensions
+            writer.write(width + " " + height + "\n");
+            // write max value
+            writer.write(scale + "\n");
+            // write image
+            writePpm( writer );
+            writer.close();
+        }
+        catch (IOException e) {
+            System.out.println("readPgmFile: failed to read file!  Error: " + e.getLocalizedMessage());
+        }
+    }
+    public static String writePpm(BufferedWriter writer)
+    throws IOException {
+        System.out.println("in ppmToString"); //debug
+        String line = "";
+        
+        for ( int i=0 ; i< ppm.length ; i++) {
+            for ( int j=0 ; j<ppm[i].length ; j++) {
+                    line += ppm[i][j][0] + " ";
+                    line += ppm[i][j][1] + " ";
+                    line += ppm[i][j][2] + " ";
+            }
+            writer.write( line + '\n');
+            line = "";
+        }
+        System.out.println("return line");
+        return line;
+    }
 }

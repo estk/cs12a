@@ -1,6 +1,7 @@
 class YummyCritter extends Critter {
     public YummyCritter(int xCoor, int yCoor, int aPos) {
         super(xCoor, yCoor, aPos);
+        Life.makeGreen(xCoor, yCoor);
     }
 
     void move(int[][] terrain)
