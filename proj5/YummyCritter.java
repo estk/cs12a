@@ -15,7 +15,6 @@ class YummyCritter extends Critter {
         // note: there are 48 = 7x7 - 1 candidate cells
 
         while (repeat) {
-        System.out.println("DEBUG: starting random loop. (yummy)"); // debug
             line = null;
             // get a random number between 0..47
             randomNum = Life.random.nextInt(48);
@@ -39,12 +38,10 @@ class YummyCritter extends Critter {
                     repeat = false;
             }
         }
-        System.out.println("Exited random loop.");
         mark(line);
     }
 
     void mark(int[][] line) {
-        System.out.println("MOVED TO: "); // debug
         
         for (int i=0 ; i < line.length ; i++)
             Life.makeBlue(line[i][0], line[i][1]);
